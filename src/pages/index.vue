@@ -12,7 +12,10 @@
 
     <router-link to="/table">table</router-link>
 
-    <v-input label="姓名" max="20" min="10" value="3" style="width: 100%;" ></v-input>
+
+    <form>
+      <v-input label="姓名" name="hello" value="2" style="width: 100%;" format="int"></v-input>
+    </form>
 
   </div>
 </template>
