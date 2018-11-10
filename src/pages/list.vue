@@ -7,7 +7,7 @@
       <router-link to="/">index</router-link>
     </div>
     <div style="text-align: center;vertical-align: middle;display: table-cell">
-      <item-v v-for="n in 10"></item-v>
+      <item-v v-for="n in 10" keys='index'></item-v>
     </div>
   </div>
 </template>
