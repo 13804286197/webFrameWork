@@ -5,9 +5,29 @@ import App from './App'
 import router from './router'
 import axios from 'axios';
 import qs from 'qs';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+
+import {
+  Input,
+  Button,
+  Select,
+  Radio,
+  RadioGroup,
+  RadioButton,
+  Checkbox,
+  CheckboxGroup,
+  DatePicker,
+  Form,
+  FormItem,
+  Loading,
+  Message
+  // MessageBox,
+} from 'element-ui'
 Vue.prototype.$qs = qs
+Vue.use(Message);
 
-
+Vue.use(ElementUI);
 axios.defaults.timeout = 50000;// 在超时前，所有请求都会等待 5 秒
 axios.defaults.headers.post['Content-Type']= 'application/x-www-form-urlencoded;charset=UTF-8';// 配置请求头
 axios.defaults.baseURL = 'http://localhost:8090';// 配置接口地址

@@ -1,9 +1,9 @@
 <template>
-  <div style="text-align: center;margin-top: 20px;">
-    <span v-model="lb">{{lb}}</span>
-    <input type="text"  v-model="currentValue" @change="handleChange">
-    <span v-model="msg">{{msg}}</span>
-  </div>
+  <el-row :gutter="100">
+    <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1"><span v-model="lb" style="font-weight:bold;font-style:italic;">{{lb}}</span></el-col>
+    <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11"><input type="text"  v-model="currentValue" @change="handleChange"></el-col>
+    <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11"><span v-model="msg"  style="color: red;">{{msg}}</span></el-col>
+  </el-row>
 </template>
 
 <script>
@@ -13,7 +13,7 @@
     data(){
       return {
         msg:this.msg,
-        lb:this.label,
+        lb:this.label+":",
         currentValue:this.value
       }
     },
@@ -26,9 +26,11 @@
 
       validate:function (val) {
         if(this.format=='int'){
+
           if(!this.isNumber(val)){
-            this.msg = '输入类型不正确';
+             this.msg = '输入类型不正确';
           }else {
+
             this.msg = '';
           }
         }
@@ -44,19 +46,21 @@
   }
 </script>
 
-<style scoped>
-  input{
-    width: 280px;
-    height: 36px;
-    padding: 0 10px;
-    border: 1px solid #ccc;
+<style>
+  .el-col {
     border-radius: 4px;
   }
-  button{
-    border: none;
-    background: #4e83e4;
-    color: #fff;
-    height: 36px;
-    width: 36px;
+  .bg-purple-dark {
+    background: #99a9bf;
+  }
+  .bg-purple {
+    background: #d3dce6;
+  }
+  .bg-purple-light {
+    background: #e5e9f2;
+  }
+  .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
   }
 </style>

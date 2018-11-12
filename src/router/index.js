@@ -3,6 +3,9 @@ import Router from 'vue-router'
 import index from '@/pages/index'
 import list from '@/pages/list'
 import item from '@/pages/item'
+import login from '@/pages/common/login'
+import { Message } from 'element-ui';
+
 import view from './view'
 
 
@@ -19,6 +22,10 @@ export default new Router({
     {
       path: '/',
       component: index
+    },
+    {
+      path: '/login',
+      component: login
     },
     {
       path: '/list',

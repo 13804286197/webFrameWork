@@ -11,10 +11,11 @@
     <button @click="getInfo()">获取数据</button>
 
     <router-link to="/table">table</router-link>
+    <router-link to="/login">登陆</router-link>
 
 
     <form>
-      <v-input label="姓名" name="hello" value="2" style="width: 100%;" format="int"></v-input>
+      <v-input label="姓名" name="hello"  style="width: 100%;" format="int"></v-input>
     </form>
 
   </div>
@@ -49,22 +50,6 @@
       goTo:function (url) {
         this.$router.push(url);
 
-      },
-      getInfo: function () {
-
-        var router = this.$router;
-        var params = new URLSearchParams();
-        params.append('username','wangliang');
-        params.append('password','wangliang')
-        this.$axios.post(
-          '/common/info',params)
-          .then(function (response) {
-            console.log(response.data);
-            router.push('/list')
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
       }
 
 
