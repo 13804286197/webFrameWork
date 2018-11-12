@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import index from '@/pages/index'
 import list from '@/pages/list'
 import item from '@/pages/item'
+import home from '@/pages/manager/home'
 import login from '@/pages/common/login'
 import { Message } from 'element-ui';
 
@@ -26,6 +27,10 @@ export default new Router({
     {
       path: '/login',
       component: login
+    },
+    {
+      path: '/home',
+      component: home
     },
     {
       path: '/list',

@@ -1,13 +1,13 @@
 <template>
-    <el-form id="form" :rules="rules" ref="form" :model="loginform" label-width="80px">
-      <el-form-item prop="username" label="账户：">
+    <el-form id="form"  :rules="rules" ref="form" :model="loginform" label-width="80px" style="width: 400px;margin-left: 35%;margin-top: 10%">
+      <el-form-item prop="username" label="账户："  >
         <el-tooltip class="item"  content="长度在 8 到 20 个字符"  effect="light" placement="right-start">
-        <el-input v-model="loginform.username" ></el-input>
+        <el-input v-model="loginform.username"  ></el-input>
         </el-tooltip>
       </el-form-item>
-      <el-form-item prop="password" label="密码：" >
+      <el-form-item prop="password" label="密码："  >
         <el-tooltip class="item"  content="长度在 8 到 20 个字符"  effect="light" placement="right-start">
-        <el-input v-model="loginform.password"></el-input>
+        <el-input v-model="loginform.password"  ></el-input>
         </el-tooltip>
       </el-form-item>
       <el-form-item>
@@ -20,21 +20,22 @@
 <style>
 
 
-    #form{
-      margin-left: 500px;
-      margin-top: 200px;
-    }
+
 
     body {
-      width: 100%;
-      height: 100%;
+
+      background: url("/static/imgs/main-back.jpg") no-repeat;
       text-align: center;
       vertical-align: middle;
       margin:0px auto;
     }
 </style>
 
+<script src=""></script>
 <script>
+
+
+
   export default {
 
 
@@ -80,6 +81,10 @@
       loginSuccess:function () {
         this.$message('这是一条消息提示');
       },
+      goTo:function (url) {
+        this.$router.push(url);
+
+      },
       login: function () {
 
         var that = this;
@@ -96,6 +101,7 @@
               type: 'success',
               position: 'bottom-right'
             });
+            that.goTo('/home');
           })
           .catch(function (error) {
             console.log(error);
