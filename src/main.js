@@ -7,6 +7,10 @@ import axios from 'axios';
 import qs from 'qs';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import {validate} from '../static/js/common/validate/validate.js' //注意路径
+
+Vue.prototype.$validater = validate
+
 
 import {
   Input,
@@ -25,7 +29,7 @@ import {
   // MessageBox,
 } from 'element-ui'
 Vue.prototype.$qs = qs
-Vue.use(Message);
+//Vue.use(Message);
 
 Vue.use(ElementUI);
 axios.defaults.timeout = 50000;// 在超时前，所有请求都会等待 5 秒
