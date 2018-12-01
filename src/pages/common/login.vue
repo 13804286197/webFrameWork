@@ -1,12 +1,12 @@
 <template>
-    <el-form id="form"  :rules="rules" ref="form" :model="loginform" label-width="80px" style="width: 400px;margin-left: 35%;margin-top: 10%">
+    <el-form :rules="rules" ref="form" :model="loginform" label-width="80px" style="width: 400px;margin-left: 35%;margin-top: 10%">
       <el-form-item prop="username" label="账户："  >
-        <el-tooltip class="item"  content="长度在 8 到 20 个字符"  effect="light" placement="right-start">
+        <el-tooltip class="item"  content="长度在 5 到 20 个字符"  effect="light" placement="right-start">
         <el-input v-model="loginform.username"  ></el-input>
         </el-tooltip>
       </el-form-item>
       <el-form-item prop="password" label="密码："  >
-        <el-tooltip class="item"  content="长度在 8 到 20 个字符"  effect="light" placement="right-start">
+        <el-tooltip class="item"  content="长度在 5 到 20 个字符"  effect="light" placement="right-start">
         <el-input v-model="loginform.password"  ></el-input>
         </el-tooltip>
       </el-form-item>
@@ -56,7 +56,7 @@
               validator:validater.emptyValidator
             },
             //可以设置双重验证标准
-            { min: 8, max: 20,  message: '长度在 8 到 20 个字符'}
+            { min: 5, max: 20,  message: '长度在 5 到 20 个字符'}
           ],
           password:[
             { required: true, //是否必填
@@ -65,7 +65,7 @@
 
             },
             //可以设置双重验证标准
-            { min: 8, max: 20,  message: '长度在 8 到 20 个字符', }
+            { min: 5, max: 20,  message: '长度在 5到 20 个字符', }
           ]
 
         }

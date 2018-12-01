@@ -81,7 +81,6 @@
       methods:{
         goTo:function (component,tabTitle,action) {
 
-          alert(component+":"+tabTitle);
           this.$emit('goTo',component,tabTitle,action)
           //this.$router.push(url);
         }

@@ -5,6 +5,7 @@ function validater() {
   },
 
     this.emptyValidator = function (rule, value, callback) {
+
       if (!value) {
         return callback(new Error('用户名不能为空'));
       } else {
@@ -16,6 +17,20 @@ function validater() {
         title: '成功',
         message:msg,
         type: 'success',
+        position: 'bottom-right'
+      });
+    },
+    this.showErrorBottomRight = function (obj,msg) {
+      obj.$notify.error({
+        title: '失败',
+        message:msg,
+        position: 'bottom-right'
+      });
+    },
+    this.showTitleErrorBottomRight = function (obj,title,msg) {
+      obj.$notify.error({
+        title: title,
+        message:msg,
         position: 'bottom-right'
       });
     },

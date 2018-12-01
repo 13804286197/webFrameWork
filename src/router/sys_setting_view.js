@@ -18,7 +18,7 @@ export default [
     children: [
       {
 
-        name:"sys_user_list",
+        name:"用户管理",
         path: '/sys_user_list',
         component: sys_user_list,
 
