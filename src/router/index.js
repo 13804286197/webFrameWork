@@ -4,7 +4,7 @@ import login from '@/pages/common/login'
 
 import commponent_view from './commponent_view'
 import sys_setting_view from './sys_setting_view.js'
-
+import 'url-search-params-polyfill';
 
 
 

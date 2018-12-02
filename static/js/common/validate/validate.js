@@ -49,7 +49,23 @@ function validater() {
         .catch(function (error) {
           errorFunc(error);
         });
+    },
+    this.showLoading = function (obj,msg) {
+      if(msg == null||msg ==''||msg =='undefined'){
+         msg = '加载中';
+      }
+      const loading = obj.$loading({
+        lock: true,
+        text: msg,
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+      return loading;
+    },
+    this.hiddenLoading = function (obj) {
+       obj.close();
     }
+
 
 }
 

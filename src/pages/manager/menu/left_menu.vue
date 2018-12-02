@@ -83,7 +83,11 @@
 
           this.$emit('goTo',component,tabTitle,action)
           //this.$router.push(url);
-        }
+        },
+
+      },
+      mounted(){
+        this.goTo('sys_setting_sys_user_sys_user_list','用户管理','add');
       }
     }
 </script>

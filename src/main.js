@@ -8,6 +8,7 @@ import qs from 'qs';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import {validate} from '../static/js/common/validate/validate.js' //注意路径
+import "babel-polyfill";
 
 Vue.prototype.$validater = validate
 

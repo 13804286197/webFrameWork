@@ -3,24 +3,18 @@
   <div>
     <el-container>
       <el-header>
+        <el-form :model="queryForm"  ref="addForm" >
         <el-row :gutter="20">
           <el-col :span="6">
             <div class="grid-content bg-purple">
-              <el-input placeholder="请输入内容" >
+              <el-input placeholder="请输入用户名" v-model="queryForm.username" >
                 <template slot="prepend">用户名</template>
-              </el-input>
-            </div>
-          </el-col>
-          <el-col :span="6">
-            <div class="grid-content bg-purple">
-              <el-input placeholder="请输入内容" >
-                <template slot="prepend">用户编号</template>
               </el-input>
             </div>
           </el-col>
           <el-col :span="3">
             <div class="grid-content bg-purple">
-              <el-button type="primary" icon="el-icon-search">搜索</el-button>
+              <el-button type="primary" icon="el-icon-search" @click="loadUsers">搜索</el-button>
             </div>
           </el-col>
           <el-col :span="3">
@@ -30,7 +24,7 @@
           </el-col>
 
         </el-row>
-
+        </el-form>
       </el-header>
 
       <el-main>
@@ -50,13 +44,9 @@
               label="姓名"
               width="300px" align="center">
               <template slot-scope="scope" style="text-align: center">
-                <el-popover trigger="hover" placement="top">
-                  <p>姓名: {{ scope.row.name }}</p>
-                  <p>住址: {{ scope.row.address }}</p>
                   <div slot="reference" class="name-wrapper">
-                    <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                    <el-tag size="medium">{{ scope.row.username }}</el-tag>
                   </div>
-                </el-popover>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center">
@@ -152,26 +142,11 @@
       var validater = this.$validater;
 
       return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        },
-
-        ],
+        tableData: [],
         dialogFormVisible: false,
+        queryForm: {
+          username: '',
+        },
         addForm: {
           username: '',
           password: '',
@@ -200,6 +175,7 @@
         formLabelWidth: '120px'
       }
     },
+
     methods: {
       handleEdit(index, row) {
         console.log(index, row);
@@ -207,11 +183,36 @@
       handleDelete(index, row) {
         console.log(index, row);
       },
-      addUser(){
 
+      loadUsers(){
+
+
+          var that = this;
+          var loading = that.$validater.showLoading(that);
+          var params = new URLSearchParams();
+          params.append('username', this.queryForm.username);
+          that.$validater.doPost(that,
+            '/sys_user/list', params,
+            function (response) {
+
+              that.$validater.hiddenLoading(loading)
+              if (response.data.success) {
+
+                that.tableData = response.data.data;
+
+              }else {
+                that.$validater.showTitleErrorBottomRight(that,'用户列表加载失败', response.data.message);
+              }
+            },
+            function (error) {
+              that.$validater.showErrorBottomRight(that, error);
+            });
+      },
+      addUser(){
         this.$refs.addForm.validate((valid) => {
 
           var that = this;
+          var loading = that.$validater.showLoading(that);
           var params = new URLSearchParams();
           params.append('username', this.addForm.username);
           params.append('password', this.addForm.password)
@@ -219,9 +220,10 @@
             '/sys_user/add', params,
             function (response) {
 
+              that.$validater.hiddenLoading(loading)
               if (response.data.success) {
-                that.dialogTableVisible = false
                 that.$validater.showSuccessBottomRight(that, '添加用户成功');
+                that.dialogFormVisible = false;
 
               }else {
                 that.$validater.showTitleErrorBottomRight(that,'添加用户失败', response.data.message);
@@ -233,6 +235,9 @@
         });
       }
 
+    },
+    mounted(){
+      this.loadUsers();
     }
   }
 </script>
