@@ -3,34 +3,35 @@
   <div>
     <el-container>
       <el-header>
-        <el-form :model="queryForm"  ref="addForm" >
-        <el-row :gutter="20">
-          <el-col :span="6">
-            <div class="grid-content bg-purple">
-              <el-input placeholder="请输入用户名" v-model="queryForm.username" >
-                <template slot="prepend">用户名</template>
-              </el-input>
-            </div>
-          </el-col>
-          <el-col :span="3">
-            <div class="grid-content bg-purple">
-              <el-button type="primary" icon="el-icon-search" @click="loadUsers">搜索</el-button>
-            </div>
-          </el-col>
-          <el-col :span="3">
-            <div class="grid-content bg-purple">
-              <el-button type="primary" @click="dialogFormVisible = true">添加用户</el-button>
-            </div>
-          </el-col>
+        <el-form :model="queryForm" ref="addForm">
+          <el-row :gutter="20">
+            <el-col :span="6">
+              <div class="grid-content bg-purple">
+                <el-input placeholder="请输入用户名" v-model="queryForm.username">
+                  <template slot="prepend">用户名</template>
+                </el-input>
+              </div>
+            </el-col>
+            <el-col :span="3">
+              <div class="grid-content bg-purple">
+                <el-button type="primary" icon="el-icon-search" @click="loadUsers">搜索</el-button>
+              </div>
+            </el-col>
+            <el-col :span="3">
+              <div class="grid-content bg-purple">
+                <el-button type="primary" @click="dialogFormVisible = true">添加用户</el-button>
+              </div>
+            </el-col>
 
-        </el-row>
+          </el-row>
         </el-form>
       </el-header>
 
       <el-main>
         <div>
           <el-table
-            :data="tableData" align="center" :border="true" cellpadding="0" cellspacing="0" style="vertical-align:center"
+            :data="tableData" align="center" :border="true" cellpadding="0" cellspacing="0"
+            style="vertical-align:center"
             width="100%">
             <el-table-column
               label="日期"
@@ -44,9 +45,9 @@
               label="姓名"
               width="300px" align="center">
               <template slot-scope="scope" style="text-align: center">
-                  <div slot="reference" class="name-wrapper">
-                    <el-tag size="medium">{{ scope.row.username }}</el-tag>
-                  </div>
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="medium">{{ scope.row.username }}</el-tag>
+                </div>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center">
@@ -58,7 +59,7 @@
                 <el-button
                   size="mini"
                   type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">删除
+                  @click="handleDelete(scope.$index, scope.row.id)">删除
                 </el-button>
               </template>
             </el-table-column>
@@ -67,9 +68,13 @@
         </div>
         <div style="margin-top: 100px">
           <el-pagination
-            background
-            layout="prev, pager, next"
-            :total="1000">
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="pageInfo.currentPage"
+            :page-sizes="[5, 10, 15, 20]"
+            :page-size="pageInfo.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="pageInfo.totalCount">
           </el-pagination>
         </div>
       </el-main>
@@ -77,16 +82,16 @@
     </el-container>
 
 
-    <el-dialog title="添加系统用户" :visible.sync="dialogFormVisible" width="600px" >
-      <el-form :model="addForm" :rules="addUserRules" ref="addForm" >
+    <el-dialog title="添加系统用户" :visible.sync="dialogFormVisible" width="600px">
+      <el-form :model="addForm" :rules="addUserRules" ref="addForm">
         <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
-          <el-tooltip class="item"  content="长度在 5 到 20 个字符"  effect="light" placement="right-start">
-          <el-input v-model="addForm.username" ></el-input>
+          <el-tooltip class="item" content="长度在 5 到 20 个字符" effect="light" placement="right-start">
+            <el-input v-model="addForm.username"></el-input>
           </el-tooltip>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
-          <el-tooltip class="item"  content="长度在 5 到 20 个字符"  effect="light" placement="right-start">
-          <el-input v-model="addForm.password" ></el-input>
+          <el-tooltip class="item" content="长度在 5 到 20 个字符" effect="light" placement="right-start">
+            <el-input v-model="addForm.password"></el-input>
           </el-tooltip>
         </el-form-item>
       </el-form>
@@ -103,13 +108,9 @@
 <style>
 
 
-
   .el-col {
     border-radius: 4px;
   }
-
-
-
 
   .el-menu-demo {
     text-align: center;
@@ -144,6 +145,12 @@
       return {
         tableData: [],
         dialogFormVisible: false,
+        totalCount: 0,
+        pageInfo: {
+          totalCount: 0,
+          currentPage: 1,
+          pageSize: 5
+        },
         queryForm: {
           username: '',
         },
@@ -153,21 +160,23 @@
         },
         addUserRules: {
           username: [
-            { required: true, //是否必填
+            {
+              required: true, //是否必填
               trigger: 'blur', //何事件触发
-              validator:validater.emptyValidator
+              validator: validater.emptyValidator
             },
             //可以设置双重验证标准
-            { min: 5, max: 20,  message: '长度在 5到 20 个字符'}
+            {min: 5, max: 20, message: '长度在 5到 20 个字符'}
           ],
-          password:[
-            { required: true, //是否必填
+          password: [
+            {
+              required: true, //是否必填
               trigger: 'blur',  //何事件触发
-              validator:validater.emptyValidator
+              validator: validater.emptyValidator
 
             },
             //可以设置双重验证标准
-            { min: 5, max: 20,  message: '长度在 5 到 20 个字符', }
+            {min: 5, max: 20, message: '长度在 5 到 20 个字符',}
           ]
 
         },
@@ -180,35 +189,79 @@
       handleEdit(index, row) {
         console.log(index, row);
       },
-      handleDelete(index, row) {
-        console.log(index, row);
-      },
+      handleDelete(index, id) {
 
-      loadUsers(){
-
+        this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
 
           var that = this;
           var loading = that.$validater.showLoading(that);
           var params = new URLSearchParams();
-          params.append('username', this.queryForm.username);
+          params.append('userId', id);
           that.$validater.doPost(that,
-            '/sys_user/list', params,
+            '/sys_user/del', params,
             function (response) {
+              that.$validater.hiddenLoading(loading);
+              that.loadUsers();
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+            }
+          );
+        }).catch(() => {
+          that.$validater.hiddenLoading(loading)
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
 
-              that.$validater.hiddenLoading(loading)
-              if (response.data.success) {
-
-                that.tableData = response.data.data;
-
-              }else {
-                that.$validater.showTitleErrorBottomRight(that,'用户列表加载失败', response.data.message);
-              }
-            },
-            function (error) {
-              that.$validater.showErrorBottomRight(that, error);
-            });
       },
-      addUser(){
+
+      loadUsers() {
+
+
+        var that = this;
+        var loading = that.$validater.showLoading(that);
+        var params = new URLSearchParams();
+        params.append('pageInfo', JSON.stringify(this.pageInfo));
+        params.append('username', this.queryForm.username);
+        that.$validater.doPost(that,
+          '/sys_user/list', params,
+          function (response) {
+
+            that.$validater.hiddenLoading(loading)
+            if (response.data.success) {
+
+              that.pageInfo.totalCount = response.data.totalCount;
+
+              that.tableData = response.data.data;
+
+            } else {
+              that.$validater.showTitleErrorBottomRight(that, '用户列表加载失败', response.data.message);
+            }
+          },
+          function (error) {
+            that.$validater.hiddenLoading(loading)
+            that.$validater.showErrorBottomRight(that, error);
+          });
+      },
+      handleSizeChange(size) {
+
+        this.pageInfo.pageSize = size;
+        this.loadUsers();
+      },
+      handleCurrentChange(currentPage) {
+
+        this.pageInfo.currentPage = currentPage;
+        this.loadUsers();
+
+      },
+      addUser() {
         this.$refs.addForm.validate((valid) => {
 
           var that = this;
@@ -224,9 +277,9 @@
               if (response.data.success) {
                 that.$validater.showSuccessBottomRight(that, '添加用户成功');
                 that.dialogFormVisible = false;
-
-              }else {
-                that.$validater.showTitleErrorBottomRight(that,'添加用户失败', response.data.message);
+                that.loadUsers();
+              } else {
+                that.$validater.showTitleErrorBottomRight(that, '添加用户失败', response.data.message);
               }
             },
             function (error) {
@@ -236,7 +289,8 @@
       }
 
     },
-    mounted(){
+    mounted() {
+
       this.loadUsers();
     }
   }
