@@ -19,7 +19,7 @@
             </el-col>
             <el-col :span="3">
               <div class="grid-content bg-purple">
-                <el-button type="primary" @click="dialogFormVisible = true">添加用户</el-button>
+                <el-button type="primary" @click="addUser()">添加用户</el-button>
               </div>
             </el-col>
 
@@ -54,7 +54,7 @@
               <template slot-scope="scope" style="text-align: center;margin: auto">
                 <el-button
                   size="mini"
-                  @click="handleEdit(scope.$index, scope.row)">编辑
+                  @click="editUser(scope.$index, scope.row.id)">编辑
                 </el-button>
                 <el-button
                   size="mini"
@@ -82,9 +82,9 @@
     </el-container>
 
 
-    <el-dialog title="添加系统用户" :visible.sync="dialogFormVisible" width="600px">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="600px">
       <el-form :model="addForm" :rules="addUserRules" ref="addForm">
-        <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
+        <el-form-item  label="用户名" :label-width="formLabelWidth" prop="username">
           <el-tooltip class="item" content="长度在 5 到 20 个字符" effect="light" placement="right-start">
             <el-input v-model="addForm.username"></el-input>
           </el-tooltip>
@@ -97,7 +97,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addUser">确 定</el-button>
+        <el-button type="primary" @click="handleAddOrEditUser">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -143,20 +143,17 @@
       var validater = this.$validater;
 
       return {
+        pageInfo : validater.pageInfo,
         tableData: [],
         dialogFormVisible: false,
-        totalCount: 0,
-        pageInfo: {
-          totalCount: 0,
-          currentPage: 1,
-          pageSize: 5
-        },
+        dialogTitle:'添加系统用户',
         queryForm: {
           username: '',
         },
         addForm: {
           username: '',
           password: '',
+          userid :'',
         },
         addUserRules: {
           username: [
@@ -186,37 +183,16 @@
     },
 
     methods: {
-      handleEdit(index, row) {
-        console.log(index, row);
-      },
+
       handleDelete(index, id) {
 
-        this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-
-          var that = this;
-          var loading = that.$validater.showLoading(that);
+        var that = this;
+        this.$validater.commonConfirm(that,function() {
           var params = new URLSearchParams();
           params.append('userId', id);
-          that.$validater.doPost(that,
-            '/sys_user/del', params,
-            function (response) {
-              that.$validater.hiddenLoading(loading);
-              that.loadUsers();
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              });
-            }
-          );
-        }).catch(() => {
-          that.$validater.hiddenLoading(loading)
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
+          var url = '/sys_user/del';
+          that.$validater.loadingPost(that, url, params, that.pageInfo, '删除成功', null,function (result) {
+            that.loadUsers();
           });
         });
 
@@ -224,31 +200,18 @@
 
       loadUsers() {
 
-
         var that = this;
-        var loading = that.$validater.showLoading(that);
         var params = new URLSearchParams();
         params.append('pageInfo', JSON.stringify(this.pageInfo));
-        params.append('username', this.queryForm.username);
-        that.$validater.doPost(that,
-          '/sys_user/list', params,
-          function (response) {
+        params.append('like_username', that.queryForm.username);
+        var url = '/sys_user/list';
+        this.$validater.loadingPost(that, url, params, this.pageInfo, function (results) {
+          debugger
+          that.tableData = results;
+        }, null);
 
-            that.$validater.hiddenLoading(loading)
-            if (response.data.success) {
 
-              that.pageInfo.totalCount = response.data.totalCount;
 
-              that.tableData = response.data.data;
-
-            } else {
-              that.$validater.showTitleErrorBottomRight(that, '用户列表加载失败', response.data.message);
-            }
-          },
-          function (error) {
-            that.$validater.hiddenLoading(loading)
-            that.$validater.showErrorBottomRight(that, error);
-          });
       },
       handleSizeChange(size) {
 
@@ -261,31 +224,49 @@
         this.loadUsers();
 
       },
-      addUser() {
+      addUser(){
+
+        this.dialogTitle = '添加系统用户';
+        this.dialogFormVisible = true;
+        this.addForm.userid = null;
+
+      },
+      editUser(index,userid){
+
+        this.addForm.userid = userid;
+
+        debugger
+        var that = this;
+        var params = new URLSearchParams();
+        params.append('userid', userid);
+        var url = '/sys_user/getUserinfo';
+        this.$validater.loadingPost(this, url, params, this.pageInfo,null,'获取用户信息失败' ,function (result) {
+          debugger
+          that.dialogTitle = '编辑系统用户';
+          that.dialogFormVisible = true;
+          that.addForm.username =result.username ;
+          that.addForm.password = result.password;;
+        });
+      },
+      handleAddOrEditUser() {
         this.$refs.addForm.validate((valid) => {
 
-          var that = this;
-          var loading = that.$validater.showLoading(that);
-          var params = new URLSearchParams();
-          params.append('username', this.addForm.username);
-          params.append('password', this.addForm.password)
-          that.$validater.doPost(that,
-            '/sys_user/add', params,
-            function (response) {
+          if (valid) {
 
-              that.$validater.hiddenLoading(loading)
-              if (response.data.success) {
-                that.$validater.showSuccessBottomRight(that, '添加用户成功');
-                that.dialogFormVisible = false;
-                that.loadUsers();
-              } else {
-                that.$validater.showTitleErrorBottomRight(that, '添加用户失败', response.data.message);
-              }
-            },
-            function (error) {
-              that.$validater.showErrorBottomRight(that, error);
+            var that = this;
+            var params = new URLSearchParams();
+            params.append('username', this.addForm.username);
+            params.append('password', this.addForm.password);
+            params.append('userid', this.addForm.userid);
+            var url = '/sys_user/addOrEdit';
+            this.$validater.loadingPost(this, url, params, this.pageInfo,'','操作失败' ,function () {
+              that.dialogFormVisible = false;
+              that.loadUsers();
             });
+
+          }
         });
+
       }
 
     },
