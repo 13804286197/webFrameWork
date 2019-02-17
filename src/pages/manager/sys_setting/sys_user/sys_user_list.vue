@@ -235,7 +235,6 @@
 
         this.addForm.userid = userid;
 
-        debugger
         var that = this;
         var params = new URLSearchParams();
         params.append('userid', userid);

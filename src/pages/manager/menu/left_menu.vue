@@ -15,8 +15,8 @@
                 </template>
                 <el-menu-item-group>
                   <el-menu-item index="1-1" @click="goTo('sys_setting_sys_user_sys_user_list','用户管理','add')">用户管理</el-menu-item>
-                  <el-menu-item index="1-2" @click="goTo('sys_setting_sys_user_sys_user_list','权限管理','add')">权限管理</el-menu-item>
-                  <el-menu-item index="1-3">权限集管理</el-menu-item>
+                  <el-menu-item index="1-2" @click="goTo('sys_setting_sys_user_sys_show_perms','权限列表','add')">权限列表</el-menu-item>
+                  <el-menu-item index="1-3" @click="goTo('sys_setting_sys_user_sys_perms_group','权限集管理','add')">权限集管理</el-menu-item>
                   <el-menu-item index="1-4">权限配置</el-menu-item>
 
                 </el-menu-item-group>

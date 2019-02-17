@@ -49,7 +49,9 @@
           for(var i = 0 ; i <this.editableTabs.length ; i ++){
                var tab = this.editableTabs[i];
                if(tab.title ===title){
-                   return;
+
+                 this.editableTabsValue = tab.name;
+                 return;
                }
           }
           this.editableTabs.push({
