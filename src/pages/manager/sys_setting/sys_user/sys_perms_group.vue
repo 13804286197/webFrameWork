@@ -112,6 +112,9 @@
         <el-button type="primary" @click="handleAddOrEditPermsGroup">确 定</el-button>
       </div>
     </el-dialog>
+
+    <sys_setting_sys_user_sys_perms_group_manager :managerDialogFormVisible="isCloseForm" :permGroupId="permGroupManagerId" @closeForm="closeForm"></sys_setting_sys_user_sys_perms_group_manager>
+
   </div>
 </template>
 
@@ -130,11 +133,13 @@
           var validater = this.$validater;
 
           return {
+            permGroupManagerId:"",
             dialogFormVisible:false,
             dialogTitle:'',
             pageInfo: validater.pageInfo,
             formLabelWidth: '120px',
             tableData: [],
+            isCloseForm:true,
             addForm:{
               permGroupName:'',
               permGroupId:'',
@@ -182,7 +187,8 @@
           }, null);
         },
         handleManager(index,id){
-
+          this.permGroupManagerId = id;
+          this.isCloseForm = true;
         },
         handleSizeChange(size) {
 
@@ -194,6 +200,10 @@
           this.pageInfo.currentPage = currentPage;
           this.loadPermsGroups();
 
+        },
+        closeForm(params){
+          this.permGroupManagerId = "";
+          this.isCloseForm = false;
         },
         handleAddOrEditPermsGroup(){
           this.$refs.addForm.validate((valid) => {
