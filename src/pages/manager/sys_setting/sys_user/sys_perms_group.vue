@@ -113,7 +113,7 @@
       </div>
     </el-dialog>
 
-    <sys_setting_sys_user_sys_perms_group_manager :managerDialogFormVisible="isCloseForm" :permGroupId="permGroupManagerId" @closeForm="closeForm"></sys_setting_sys_user_sys_perms_group_manager>
+    <sys_setting_sys_user_sys_perms_group_manager :managerDialogFormVisible="isShowManagerDialog" :permGroupId="permGroupManagerId" @closeForm="closeForm"></sys_setting_sys_user_sys_perms_group_manager>
 
   </div>
 </template>
@@ -139,7 +139,7 @@
             pageInfo: validater.pageInfo,
             formLabelWidth: '120px',
             tableData: [],
-            isCloseForm:true,
+            isShowManagerDialog :false,
             addForm:{
               permGroupName:'',
               permGroupId:'',
@@ -187,8 +187,9 @@
           }, null);
         },
         handleManager(index,id){
+
           this.permGroupManagerId = id;
-          this.isCloseForm = true;
+          this.isShowManagerDialog = true;
         },
         handleSizeChange(size) {
 
@@ -202,8 +203,8 @@
 
         },
         closeForm(params){
-          this.permGroupManagerId = "";
-          this.isCloseForm = false;
+          //this.permGroupManagerId = "";
+          this.isShowManagerDialog = false;
         },
         handleAddOrEditPermsGroup(){
           this.$refs.addForm.validate((valid) => {
@@ -246,7 +247,7 @@
           params.append('uid', uid);
           var url = '/sys_perms_group/getPermsGroupInfo';
           this.$validater.loadingPost(this, url, params, this.pageInfo,null,'编辑系统权限集失败' ,function (result) {
-            debugger
+
             that.dialogTitle = '编辑系统权限集';
             that.dialogFormVisible = true;
             that.addForm.permGroupName =result.name ;

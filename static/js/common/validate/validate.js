@@ -88,6 +88,8 @@ function validater() {
       });
     },
     this.loadingPost= function (that,url,params,pageInfo,successMsg,failedMsg,successCallBackFunc) {
+
+
       var loading = that.$validater.showLoading(that);
 
       that.$validater.doPost(that,
@@ -99,10 +101,11 @@ function validater() {
           if (response.data.success) {
 
 
-            pageInfo.totalCount = response.data.totalCount;
+            if(pageInfo !=null&&pageInfo!='undefined'){
+              pageInfo.totalCount = response.data.totalCount;
+            }
 
 
-            debugger
             var msg = '操作成功';
             if(successMsg == null){
               if(successCallBackFunc !=null&&successCallBackFunc!='undefined') {
@@ -126,7 +129,6 @@ function validater() {
               successCallBackFunc(response.data.data);
             }
           } else {
-            debugger
             var msg = '操作失败';
             if(failedMsg == null){
               return;

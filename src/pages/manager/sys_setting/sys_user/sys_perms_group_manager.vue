@@ -1,10 +1,16 @@
 <template>
   <div>
-<el-dialog  :title="permGroupId" :visible.sync="managerDialogFormVisible" @close="closeDialog" :showClose="false">
-  <el-transfer v-model="value1"
-               style="text-align: left; display: inline-block"
-               :data="data"></el-transfer>
+<el-dialog  :title="permGroupId" :visible.sync="managerDialogFormVisible"  :showClose="false">
 
+  <el-transfer
+    style="text-align: left; display: inline-block"
+
+    filterable
+    :filter-method="filterMethod"
+    filter-placeholder="请输入城市拼音"
+    v-model="value1"
+    :data="data">
+  </el-transfer>
   <div slot="footer" class="dialog-footer">
     <el-button @click="sendMessage">取 消</el-button>
   </div>
@@ -17,25 +23,11 @@
     props:['managerDialogFormVisible','permGroupId'],
     data() {
 
-
-      const generateData2 = _ => {
-        const data = [];
-        const cities = ['上海', '北京', '广州', '深圳', '南京', '西安', '成都'];
-        const pinyin = ['shanghai', 'beijing', 'guangzhou', 'shenzhen', 'nanjing', 'xian', 'chengdu'];
-        cities.forEach((city, index) => {
-          data.push({
-            label: city,
-            key: index,
-            pinyin: pinyin[index]
-          });
-        });
-        return data;
-      };
       return {
-        data: generateData2(),
+        data: "",
         value1: [],
         filterMethod(query, item) {
-          return item.pinyin.indexOf(query) > -1;
+          return item.name.indexOf(query) > -1;
         }
       }
     },
@@ -44,15 +36,34 @@
         console.log(value);
       },
       permGroupId: function(value,oldValue) {
-        console.log(value+":"+oldValue);
+        if(value !=null&& value!=""){
+          this.handlePermsLoad(value);
+        }
       }
     },
     methods:{
       sendMessage(){
         this.$emit("closeForm","close");
       },
-      closeDialog(){
-        this.$emit("closeForm","close");
+      handlePermsLoad(permGroupId){
+
+        var that = this;
+        var params = new URLSearchParams();
+        params.append('permsGroupId', permGroupId);
+        var url = '/sys_perms_group_manager/list';
+        this.$validater.loadingPost(that, url, params, null, function (results) {
+
+          var data = [];
+          results.forEach((perm, index) => {
+            data.push({
+              label: perm.commont,
+              key: index,
+              name: perm.commont
+            });
+          });
+
+          that.data = data;
+        }, null);
       }
     }
   }

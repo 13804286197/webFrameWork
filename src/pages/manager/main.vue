@@ -21,7 +21,7 @@
           </el-tabs>
         </el-main>
       </el-container>
-      <v-footer-menu index="1"></v-footer-menu>
+      <v-footer-menu ></v-footer-menu>
 
     </div>
 </template>
