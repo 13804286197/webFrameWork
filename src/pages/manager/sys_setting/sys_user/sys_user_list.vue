@@ -240,11 +240,11 @@
         params.append('userid', userid);
         var url = '/sys_user/getUserinfo';
         this.$validater.loadingPost(this, url, params, this.pageInfo,null,'获取用户信息失败' ,function (result) {
-          debugger
+
           that.dialogTitle = '编辑系统用户';
           that.dialogFormVisible = true;
           that.addForm.username =result.username ;
-          that.addForm.password = result.password;;
+          that.addForm.password = result.password;
         });
       },
       handleAddOrEditUser() {
