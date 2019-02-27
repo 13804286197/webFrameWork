@@ -4,7 +4,8 @@ import Vue from 'vue'
 import sys_user_list from '@/pages/manager/sys_setting/sys_user/sys_user_list'
 import sys_show_perms from '@/pages/manager/sys_setting/sys_user/sys_show_perms'
 import sys_perms_group from '@/pages/manager/sys_setting/sys_user/sys_perms_group'
-import sys_perms_group_manager from '@/pages/manager/sys_setting/sys_user/sys_perms_group_manager'
+import sys_perms_role from '@/pages/manager/sys_setting/sys_user/sys_perms_role'
+import sys_perms_group_manager from '@/pages/manager/sys_setting/sys_user/dialog/sys_perms_group_manager_dialog'
 
 
 
@@ -14,6 +15,7 @@ Vue.component('sys_setting_sys_user_sys_user_list',sys_user_list);
 Vue.component('sys_setting_sys_user_sys_show_perms',sys_show_perms);
 Vue.component('sys_setting_sys_user_sys_perms_group',sys_perms_group);
 Vue.component('sys_setting_sys_user_sys_perms_group_manager',sys_perms_group_manager);
+Vue.component('sys_setting_sys_user_sys_perms_role',sys_perms_role);
 
 export default [
 
@@ -37,9 +39,17 @@ export default [
       },
       {
 
-        name:"权限集管理",
+        name:"模块管理",
         path: '/sys_perms_group',
         component: sys_perms_group,
+
+      }
+      ,
+      {
+
+        name:"角色管理",
+        path: '/sys_perms_role',
+        component: sys_perms_role,
 
       }
     ]

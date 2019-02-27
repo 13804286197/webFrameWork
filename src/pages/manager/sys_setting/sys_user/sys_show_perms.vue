@@ -94,7 +94,6 @@
         params.append('like_permUrl', that.queryForm.permsUrl);
         var url = '/sys_perms/list';
         this.$validater.loadingPost(that, url, params, this.pageInfo, function (results) {
-          debugger
           that.tableData = results;
         }, null);
       },

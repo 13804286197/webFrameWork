@@ -206,7 +206,6 @@
         params.append('like_username', that.queryForm.username);
         var url = '/sys_user/list';
         this.$validater.loadingPost(that, url, params, this.pageInfo, function (results) {
-          debugger
           that.tableData = results;
         }, null);
 
