@@ -44,7 +44,6 @@
               label="角色ID"
               width="400px" align="center">
               <template slot-scope="scope">
-                <i class="el-icon-time"></i>
                 <span style="text-align: center">{{ scope.row.role_id }}</span>
               </template>
             </el-table-column>
