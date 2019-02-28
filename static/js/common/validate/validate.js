@@ -13,7 +13,7 @@ function validater() {
     this.emptyValidator = function (rule, value, callback) {
 
       if (!value) {
-        return callback(new Error('用户名不能为空'));
+        return callback(new Error('输入项不能为空'));
       } else {
         return callback() // 一些同学的问题可能就出在这里
       }

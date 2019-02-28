@@ -95,6 +95,25 @@
 
     </el-container>
 
+
+    <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="600px">
+      <el-form :model="addForm" :rules="addPermsRoleRules" ref="addForm">
+        <el-form-item  label="角色id" :label-width="formLabelWidth" prop="roleId">
+          <el-tooltip class="item" content="长度在 5 到 20 个字符" effect="light" placement="right-start">
+            <el-input v-model="addForm.roleId"></el-input>
+          </el-tooltip>
+        </el-form-item>
+        <el-form-item label="角色名称" :label-width="formLabelWidth" prop="roleName">
+          <el-tooltip class="item" content="长度在 3 到 20 个字符" effect="light" placement="right-start">
+            <el-input v-model="addForm.roleName"></el-input>
+          </el-tooltip>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer" align="center">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleAddOrEditPermsRole">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -110,21 +129,71 @@
 
           var validater = this.$validater;
 
-          return {
 
+          return {
+            dialogFormVisible:false,
+            dialogTitle:'',
             pageInfo: validater.pageInfo,
             tableData: [],
-
+            formLabelWidth: '120px',
             queryForm:{
               roleId:'',
               roleName:''
-              }
+              },
+            addForm:{
+              roleId:'',
+              roleName:'',
+              uid:''
+            } ,
+            addPermsRoleRules: {
+              roleId: [
+                {
+                  required: true, //是否必填
+                  trigger: 'blur', //何事件触发
+                  validator: validater.emptyValidator
+                },
+                //可以设置双重验证标准
+                {min: 5, max: 20, message: '长度在 5到 20 个字符'}
+              ],
+              roleName: [
+                {
+                  required: true, //是否必填
+                  trigger: 'blur',  //何事件触发
+                  validator: validater.emptyValidator
+
+                },
+                //可以设置双重验证标准
+                {min: 3, max: 20, message: '长度在 3 到 20 个字符',}
+              ]
+            },
             }
         },
       methods: {
 
         addRole:function () {
+          this.dialogTitle = '添加角色';
+          this.addForm.uid = null;
+          this.addForm.roleName = null;
+          this.addForm.roleId = null;
+          this.dialogFormVisible = true;
+        },
+        handleAddOrEditPermsRole(){
+          this.$refs.addForm.validate((valid) => {
 
+            if (valid) {
+              var that = this;
+              var params = new URLSearchParams();
+              params.append('roleId', that.addForm.roleId);
+              params.append('roleName', that.addForm.roleName);
+              params.append('uid', that.addForm.uid);
+              var url = '/sys_perms_role/addOrEdit';
+              this.$validater.loadingPost(this, url, params, this.pageInfo,'','操作失败' ,function () {
+                that.dialogFormVisible = false;
+                that.loadPermsGroups();
+              });
+
+            }
+          });
         },
         handleSizeChange(size) {
 
@@ -138,7 +207,6 @@
 
         },
         loadPermsRoles: function () {
-          debugger
           var that = this;
           var params = new URLSearchParams();
           params.append('pageInfo', JSON.stringify(this.pageInfo));
