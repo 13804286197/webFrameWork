@@ -36,6 +36,8 @@ Vue.use(ElementUI);
 axios.defaults.timeout = 50000;// 在超时前，所有请求都会等待 5 秒
 axios.defaults.headers.post['Content-Type']= 'application/x-www-form-urlencoded;charset=UTF-8';// 配置请求头
 axios.defaults.baseURL = 'http://localhost:8090';// 配置接口地址
+// axios.defaults.baseURL = 'http://localhost:80';// 配置nginx tomcat集群地址
+
 axios.defaults.withCredentials = true;
 
 Vue.prototype.$axios = axios;// 将axios配置成vue的原型

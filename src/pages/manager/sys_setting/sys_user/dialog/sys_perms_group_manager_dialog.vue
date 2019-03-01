@@ -8,12 +8,10 @@
     style="text-align: left; display: inline-block"
 
     filterable
-    :left-default-checked="[2, 3]"
-    :right-default-checked="[1]"
     :filter-method="filterMethod"
     filter-placeholder="请输入关键字"
     :titles="['权限列表', '当前权限']"
-    v-model="value1"
+    v-model="value"
     :data="data"
     center="true"
   >
@@ -35,18 +33,18 @@
       return {
         data: [],
         title:"",
-        value1: ["/sys_perms/list"],
+        id:"",
+        value: [],
         filterMethod(query, item) {
           return item.name.indexOf(query) > -1;
         }
       }
     },
     watch: {
-      managerDialogFormVisible: function(value) {
-        console.log(value);
-      },
-      permGroupId: function(value,oldValue) {
+
+      permGroupId: function(value) {
         if(value !=null&& value!=""){
+          this.id = value;
           this.handlePermsLoad(value);
         }
       }
@@ -56,7 +54,21 @@
         this.$emit("closeForm","close");
       },
       savePerms(){
-        console.log(this.value1);
+
+        var that = this;
+        var params = new URLSearchParams();
+        params.append('permsGroupId', this.id);
+        params.append('permsUrlValues', this.value.toString());
+        var url = '/sys_perms_group_manager/save';
+        this.$validater.loadingPost(this, url, params, null,null,'操作失败' ,function (result){
+          debugger
+          if(result!=null&&result!=""){
+            that.$validater.showSuccessBottomRight(that, "保存成功");
+            that.$emit("closeForm",result);
+          }else {
+            that.$emit("closeForm","close");
+          }
+        });
       },
 
       handlePermsLoad(permGroupId){
@@ -75,8 +87,6 @@
               name: perm.commont
             });
           });
-
-          debugger
 
           that.data = data;
         }, null);
