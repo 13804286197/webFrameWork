@@ -254,7 +254,7 @@
           var params = new URLSearchParams();
           params.append('uid', uid);
           var url = '/sys_perms_group/getPermsGroupInfo';
-          this.$validater.loadingPost(this, url, params, this.pageInfo,null,'编辑系统权限集失败' ,function (result) {
+          this.$validater.loadingPost(this, url, params, null,null,'编辑系统权限集失败' ,function (result) {
 
             that.dialogTitle = '编辑系统权限集';
             that.dialogFormVisible = true;

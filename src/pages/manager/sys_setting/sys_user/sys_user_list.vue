@@ -238,7 +238,7 @@
         var params = new URLSearchParams();
         params.append('userid', userid);
         var url = '/sys_user/getUserinfo';
-        this.$validater.loadingPost(this, url, params, this.pageInfo,null,'获取用户信息失败' ,function (result) {
+        this.$validater.loadingPost(this, url, params, null,null,'获取用户信息失败' ,function (result) {
 
           that.dialogTitle = '编辑系统用户';
           that.dialogFormVisible = true;

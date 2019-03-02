@@ -62,12 +62,12 @@
                 <el-button
                   size="mini"
                   type="info"
-                  @click="editUser(scope.$index, scope.row.uid)">编辑
+                  @click="editRole(scope.$index, scope.row.id)">编辑
                 </el-button>
                 <el-button
                   size="mini"
                   type="danger"
-                  @click="handleDelete(scope.$index, scope.row.uid)">删除
+                  @click="handleDelete(scope.$index, scope.row.id)">删除
                 </el-button>
                 <el-button
                   size="mini"
@@ -170,6 +170,19 @@
         },
       methods: {
 
+        handleDelete(index, id) {
+
+          var that = this;
+          this.$validater.commonConfirm(that,function() {
+            var params = new URLSearchParams();
+            params.append('id', id);
+            var url = '/sys_perms_role/del';
+            that.$validater.loadingPost(that, url, params, null, '','删除成功',function (result) {
+              that.loadPermsRoles();
+            });
+          });
+
+        },
         addRole:function () {
           this.dialogTitle = '添加角色';
           this.addForm.uid = null;
@@ -185,14 +198,36 @@
               var params = new URLSearchParams();
               params.append('roleId', that.addForm.roleId);
               params.append('roleName', that.addForm.roleName);
-              params.append('uid', that.addForm.uid);
+              params.append('id', that.addForm.uid);
               var url = '/sys_perms_role/addOrEdit';
-              this.$validater.loadingPost(this, url, params, this.pageInfo,'','操作失败' ,function () {
+              this.$validater.loadingPost(this, url, params, null,'','操作失败' ,function (result) {
+
+
+                debugger
                 that.dialogFormVisible = false;
-                that.loadPermsGroups();
+                that.loadPermsRoles();
               });
 
             }
+          });
+        },
+        editRole(index,uid){
+
+          this.addForm.uid = uid;
+
+          var that = this;
+          var params = new URLSearchParams();
+          params.append('id', uid);
+          var url = '/sys_perms_role/getPermsRoleInfo';
+          this.$validater.loadingPost(this, url, params, null,null,'编辑系统角色失败' ,function (result) {
+
+
+            that.dialogTitle = '编辑系统角色';
+            that.dialogFormVisible = true;
+            that.addForm.roleName =result.role_name ;
+            that.addForm.roleId = result.role_id;
+            that.addForm.uid = result.id;
+
           });
         },
         handleSizeChange(size) {

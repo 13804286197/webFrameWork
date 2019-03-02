@@ -97,6 +97,7 @@ function validater() {
         function (response) {
 
 
+        debugger
           that.$validater.hiddenLoading(loading)
           if (response.data.success) {
 
@@ -110,7 +111,6 @@ function validater() {
             if(successMsg == null){
               if(successCallBackFunc !=null&&successCallBackFunc!='undefined') {
                 successCallBackFunc(response.data.data);
-
               }
             }
             else if(successMsg==''||successMsg=='undefined'){
@@ -118,6 +118,9 @@ function validater() {
                  msg = response.data.message;
               }
               that.$validater.showSuccessBottomRight(that,msg);
+              if(successCallBackFunc !=null&&successCallBackFunc!='undefined') {
+                successCallBackFunc(response.data.data);
+              }
             }else if(typeof successMsg=='function'){
                successMsg(response.data.data);
             }else {
