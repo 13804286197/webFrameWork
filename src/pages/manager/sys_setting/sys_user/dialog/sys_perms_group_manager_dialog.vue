@@ -6,10 +6,8 @@
 
   <el-transfer
     style="text-align: left; display: inline-block"
-
     filterable
-    :left-default-checked="[2, 3]"
-    :right-default-checked="[1]"
+
     :filter-method="filterMethod"
     filter-placeholder="请输入关键字"
     :titles="['权限列表', '当前权限']"
