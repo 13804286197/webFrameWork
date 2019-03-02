@@ -77,6 +77,7 @@
         params.append('permsGroupId', permGroupId);
         var url = '/sys_perms_group_manager/list';
         this.$validater.loadingPost(that, url, params, null, function (result) {
+
           that.title = result.sysPermsGroupModel.name;
           var data = [];
           result.permissions.forEach((perm, index) => {
@@ -86,7 +87,8 @@
               name: perm.commont
             });
           });
-
+          debugger
+          that.value = result.urls;
           that.data = data;
         }, null);
       }
