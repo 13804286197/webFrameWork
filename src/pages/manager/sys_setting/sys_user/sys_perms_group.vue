@@ -113,7 +113,7 @@
       </div>
     </el-dialog>
 
-    <sys_setting_sys_user_sys_perms_group_manager :managerDialogFormVisible="isShowManagerDialog" :permGroupId="permGroupManagerId" @closeForm="closeForm"></sys_setting_sys_user_sys_perms_group_manager>
+    <sys_setting_sys_user_sys_perms_group_dialog :managerDialogFormVisible="isShowManagerDialog" :permGroupId="permGroupManagerId" @closeForm="closeForm"></sys_setting_sys_user_sys_perms_group_dialog>
 
   </div>
 </template>
@@ -184,6 +184,7 @@
           var url = '/sys_perms_group/list';
           this.$validater.loadingPost(that, url, params, this.pageInfo, function (results) {
             that.tableData = results;
+            debugger
           }, null);
         },
         handleManager(index,id){
@@ -203,7 +204,14 @@
 
         },
         closeForm(params){
-          //this.permGroupManagerId = "";
+
+          /*
+          if(params!=null && params =="保存成功"){
+
+          }else if(params!=null && params =="保存失败"){
+            this.$validater.showErrorBottomRight(this, "保存失败");
+          }
+          */
           this.isShowManagerDialog = false;
         },
         handleAddOrEditPermsGroup(){

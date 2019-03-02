@@ -110,9 +110,7 @@ function validater() {
             if(successMsg == null){
               if(successCallBackFunc !=null&&successCallBackFunc!='undefined') {
                 successCallBackFunc(response.data.data);
-                if(successCallBackFunc !=null&&successCallBackFunc!='undefined') {
-                  successCallBackFunc(response.data.data);
-                }
+
               }
             }
             else if(successMsg==''||successMsg=='undefined'){
@@ -125,9 +123,7 @@ function validater() {
             }else {
               that.$validater.showSuccessBottomRight(that,successMsg);
             }
-            if(successCallBackFunc !=null&&successCallBackFunc!='undefined') {
-              successCallBackFunc(response.data.data);
-            }
+
           } else {
             var msg = '操作失败';
             if(failedMsg == null){
