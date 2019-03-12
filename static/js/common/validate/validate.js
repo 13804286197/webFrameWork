@@ -78,7 +78,7 @@ function validater() {
         type: 'warning'
       }).then(() => {
 
-        debugger
+
         doFunction();
       }).catch(() => {
         that.$message({
@@ -97,7 +97,7 @@ function validater() {
         function (response) {
 
 
-        debugger
+
           that.$validater.hiddenLoading(loading)
           if (response.data.success) {
 

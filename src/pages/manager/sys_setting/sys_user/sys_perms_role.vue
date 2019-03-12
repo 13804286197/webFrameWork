@@ -72,7 +72,7 @@
                 <el-button
                   size="mini"
                   type="primary"
-                  @click="handleManager(scope.$index, scope.row.uid)">管理
+                  @click="handleManager(scope.$index, scope.row.id)">管理
                 </el-button>
               </template>
             </el-table-column>
@@ -114,8 +114,16 @@
         <el-button type="primary" @click="handleAddOrEditPermsRole">确 定</el-button>
       </div>
     </el-dialog>
+    <sys_setting_sys_user_sys_perms_role_dialog  :managerDialogFormVisible="isShowManagerDialog" :permRoleId="permDialogRoleId" @closeForm="closeForm"></sys_setting_sys_user_sys_perms_role_dialog>
+
   </div>
+
+
+
 </template>
+
+
+
 
 <style>
     body {
@@ -131,10 +139,13 @@
 
 
           return {
+            permRoleId:"",
             dialogFormVisible:false,
             dialogTitle:'',
             pageInfo: validater.pageInfo,
             tableData: [],
+            permDialogRoleId:"",
+            isShowManagerDialog:false,
             formLabelWidth: '120px',
             queryForm:{
               roleId:'',
@@ -190,6 +201,10 @@
           this.addForm.roleId = null;
           this.dialogFormVisible = true;
         },
+        closeForm(params){
+
+          this.isShowManagerDialog = false;
+        },
         handleAddOrEditPermsRole(){
           this.$refs.addForm.validate((valid) => {
 
@@ -213,6 +228,7 @@
         },
         editRole(index,uid){
 
+          debugger
           this.addForm.uid = uid;
 
           var that = this;
@@ -234,6 +250,11 @@
 
           this.pageInfo.pageSize = size;
           this.loadPermsRoles()
+        },
+        handleManager(index,id){
+
+          this.permDialogRoleId = id;
+          this.isShowManagerDialog = true;
         },
         handleCurrentChange(currentPage) {
 

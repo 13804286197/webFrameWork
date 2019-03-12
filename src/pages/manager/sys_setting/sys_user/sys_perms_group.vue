@@ -113,7 +113,7 @@
       </div>
     </el-dialog>
 
-    <sys_setting_sys_user_sys_perms_group_dialog :managerDialogFormVisible="isShowManagerDialog" :permGroupId="permGroupManagerId" @closeForm="closeForm"></sys_setting_sys_user_sys_perms_group_dialog>
+    <sys_setting_sys_user_sys_perms_group_dialog  :managerDialogFormVisible="isShowManagerDialog" :permGroupId="permGroupManagerId" @closeForm="closeForm"></sys_setting_sys_user_sys_perms_group_dialog>
 
   </div>
 </template>
@@ -188,6 +188,7 @@
           }, null);
         },
         handleManager(index,id){
+
 
           this.permGroupManagerId = id;
           this.isShowManagerDialog = true;

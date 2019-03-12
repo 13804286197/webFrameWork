@@ -87,7 +87,7 @@
               name: perm.commont
             });
           });
-          debugger
+
           that.value = result.urls;
           that.data = data;
         }, null);
