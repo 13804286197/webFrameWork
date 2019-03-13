@@ -58,6 +58,11 @@
                 </el-button>
                 <el-button
                   size="mini"
+                  type="primary"
+                  @click="handlerRoleManager(scope.$index, scope.row.id)">角色配置
+                </el-button>
+                <el-button
+                  size="mini"
                   type="danger"
                   @click="handleDelete(scope.$index, scope.row.id)">删除
                 </el-button>
@@ -100,6 +105,10 @@
         <el-button type="primary" @click="handleAddOrEditUser">确 定</el-button>
       </div>
     </el-dialog>
+
+
+    <sys_setting_sys_user_sys_user_role_dialog  :managerDialogFormVisible="isShowManagerDialog" :permRoleId="permDialogRoleId" @closeForm="closeForm"></sys_setting_sys_user_sys_user_role_dialog>
+
   </div>
 
 
@@ -147,6 +156,7 @@
         tableData: [],
         dialogFormVisible: false,
         dialogTitle:'添加系统用户',
+        isShowManagerDialog:false,
         queryForm: {
           username: '',
         },
@@ -208,9 +218,13 @@
         this.$validater.loadingPost(that, url, params, this.pageInfo, function (results) {
           that.tableData = results;
         }, null);
+      },
+      closeForm(params){
 
-
-
+        this.isShowManagerDialog = false;
+      },
+      handlerRoleManager(index,userid){
+        this.isShowManagerDialog = true;
       },
       handleSizeChange(size) {
 

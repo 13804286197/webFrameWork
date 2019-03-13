@@ -24,7 +24,7 @@
 
     body {
 
-      background: url("/static/imgs/main-back.jpg") repeat;
+      background-color: white;
       text-align: center;
       vertical-align: middle;
       margin:0px auto;

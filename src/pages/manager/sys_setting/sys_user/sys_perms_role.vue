@@ -72,7 +72,7 @@
                 <el-button
                   size="mini"
                   type="primary"
-                  @click="handleManager(scope.$index, scope.row.id)">管理
+                  @click="handleManager(scope.$index, scope.row.id)">权限配置
                 </el-button>
               </template>
             </el-table-column>
