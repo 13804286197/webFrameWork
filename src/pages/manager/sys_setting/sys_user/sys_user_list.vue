@@ -107,7 +107,7 @@
     </el-dialog>
 
 
-    <sys_setting_sys_user_sys_user_role_dialog  :managerDialogFormVisible="isShowManagerDialog" :permRoleId="permDialogRoleId" @closeForm="closeForm"></sys_setting_sys_user_sys_user_role_dialog>
+    <sys_setting_sys_user_sys_user_role_dialog  :managerDialogFormVisible="isShowManagerDialog" :permUserId="permDialogUserId" @closeForm="closeForm"></sys_setting_sys_user_sys_user_role_dialog>
 
   </div>
 
@@ -154,6 +154,7 @@
       return {
         pageInfo : validater.pageInfo,
         tableData: [],
+        permDialogUserId:"",
         dialogFormVisible: false,
         dialogTitle:'添加系统用户',
         isShowManagerDialog:false,
@@ -224,6 +225,7 @@
         this.isShowManagerDialog = false;
       },
       handlerRoleManager(index,userid){
+        this.permDialogUserId = userid;
         this.isShowManagerDialog = true;
       },
       handleSizeChange(size) {

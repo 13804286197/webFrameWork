@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog  :title="title" :visible.sync="managerDialogFormVisible"  :showClose="false" :center="true"
+    <el-dialog :title="title" :visible.sync="managerDialogFormVisible" :showClose="false" :center="true"
     >
 
       <div style="text-align: center">
@@ -11,7 +11,7 @@
 
           :filter-method="filterMethod"
           filter-placeholder="请输入关键字"
-          :titles="['权限列表', '当前权限']"
+          :titles="['角色列表', '当前角色']"
           v-model="value"
           :data="data"
           center="true"
@@ -28,13 +28,13 @@
 
 <script>
   export default {
-    props:['managerDialogFormVisible','permUserId'],
+    props: ['managerDialogFormVisible', 'permUserId'],
     data() {
 
       return {
         data: [],
-        title:"",
-        id:"",
+        title: "",
+        id: "",
         value: [],
         filterMethod(query, item) {
           return item.name.indexOf(query) > -1;
@@ -43,54 +43,57 @@
     },
     watch: {
 
-      permRoleId: function(value) {
-        if(value !=null&& value!=""){
+      permUserId: function (value) {
+        if (value != null && value != "") {
           this.id = value;
-          this.handlePermsLoad(value);
+          this.handleRolesLoad(value);
         }
       }
     },
-    methods:{
-      sendMessage(){
-        this.$emit("closeForm","close");
+    methods: {
+      sendMessage() {
+        this.$emit("closeForm", "close");
       },
-      savePerms(){
+      savePerms() {
 
         var that = this;
         var params = new URLSearchParams();
         params.append('permsUserId', this.id);
         params.append('permsRoleIds', this.value.toString());
-        var url = '/sys_perms_role_manager/save';
-        this.$validater.loadingPost(this, url, params, null,null,'操作失败' ,function (result){
-          if(result!=null&&result!=""){
+        var url = '/sys_perms_user_role_manager/save';
+        this.$validater.loadingPost(this, url, params, null, null, '操作失败', function (result) {
+          if (result != null && result != "") {
             that.$validater.showSuccessBottomRight(that, "保存成功");
-            that.$emit("closeForm",result);
-          }else {
-            that.$emit("closeForm","close");
+            that.$emit("closeForm", result);
+          } else {
+            that.$emit("closeForm", "close");
           }
         });
       },
 
-      handlePermsLoad(permsRoleId){
+      handleRolesLoad(permsUserId) {
+
 
         var that = this;
+        that.data = [];
+        that.value = [];
         var params = new URLSearchParams();
-        params.append('permsRoleId', permsRoleId);
-        var url = '/sys_perms_role_manager/list';
+        params.append('permsUserId', permsUserId);
+        var url = '/sys_perms_user_role_manager/list';
         this.$validater.loadingPost(that, url, params, null, function (result) {
 
 
-          that.title = result.sys_perms_roleModel.role_name+"权限管理";
+          that.title = result.sysUserModel.username + "角色管理";
           var data = [];
-          result.allPermsGroupModels.forEach((module, index) => {
+          result.allPermsRoleModels.forEach((module, index) => {
             data.push({
-              label: module.name,
-              key: module.uid,
-              name: module.name
+              label: module.role_name,
+              key: module.id,
+              name: module.role_name
             });
           });
 
-          that.value = result.rolePermsGroupModels;
+          that.value = result.userRolesIds;
           that.data = data;
         }, null);
       }
