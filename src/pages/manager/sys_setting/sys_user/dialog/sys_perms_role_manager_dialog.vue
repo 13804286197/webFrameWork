@@ -5,11 +5,12 @@
       <div style="text-align: center;width: 100%;height: 400px;overflow: auto">
 
         <el-tree
-          :data="data2"
+          :data="data"
           show-checkbox
           node-key="id"
-          :default-expanded-keys="[2, 3]"
-          :default-checked-keys="[5]"
+          ref="tree"
+          default-expand-all="true"
+          :default-checked-keys="checkedKeys"
           :props="defaultProps">
         </el-tree>
       </div>
@@ -33,108 +34,12 @@
     data() {
 
       return {
-        data2: [{
-          id: 1,
-          label: '一级 1',
-          children: [{
-            id: 4,
-            label: '二级 1-1'
-          }]
-        }, {
-          id: 2,
-          label: '一级 2',
-          children: [{
-            id: 5,
-            label: '二级 2-1'
-          }, {
-            id: 6,
-            label: '二级 2-2'
-          }]
-        }, {
-          id: 3,
-          label: '一级 3',
-          children: [{
-            id: 7,
-            label: '二级 3-1'
-          }, {
-            id: 8,
-            label: '二级 3-2'
-          }]
-        }, {
-          id: 3,
-          label: '一级 3',
-          children: [{
-            id: 7,
-            label: '二级 3-1'
-          }, {
-            id: 8,
-            label: '二级 3-2'
-          }]
-        }, {
-          id: 3,
-          label: '一级 3',
-          children: [{
-            id: 7,
-            label: '二级 3-1'
-          }, {
-            id: 8,
-            label: '二级 3-2'
-          }]
-        }, {
-          id: 3,
-          label: '一级 3',
-          children: [{
-            id: 7,
-            label: '二级 3-1'
-          }, {
-            id: 8,
-            label: '二级 3-2'
-          }]
-        }, {
-          id: 3,
-          label: '一级 3',
-          children: [{
-            id: 7,
-            label: '二级 3-1'
-          }, {
-            id: 8,
-            label: '二级 3-2'
-          }]
-        }, {
-          id: 3,
-          label: '一级 3',
-          children: [{
-            id: 7,
-            label: '二级 3-1'
-          }, {
-            id: 8,
-            label: '二级 3-2'
-          }]
-        },{
-          id: 3,
-          label: '一级 3',
-          children: [{
-            id: 7,
-            label: '二级 3-1'
-          }, {
-            id: 8,
-            label: '二级 3-2'
-          }]
-        },{
-          id: 3,
-          label: '一级 3',
-          children: [{
-            id: 7,
-            label: '二级 3-1'
-          }, {
-            id: 8,
-            label: '二级 3-2'
-          }]
-        }],
         defaultProps: {
           children: 'children',
           label: 'label'
+          //label: 'label'
         },
+        checkedKeys:[],
         data: [],
         title:"",
         id:"",
@@ -159,10 +64,13 @@
       },
       savePerms(){
 
+
         var that = this;
         var params = new URLSearchParams();
         params.append('permsRoleId', this.id);
-        params.append('permsModulesIds', this.value.toString());
+        var urls = this.$refs.tree.getCheckedKeys();
+        var nurls = urls.filter(d=>d);
+        params.append('permsRoleUrls',nurls );
         var url = '/sys_perms_role_manager/save';
         this.$validater.loadingPost(this, url, params, null,null,'操作失败' ,function (result){
           if(result!=null&&result!=""){
@@ -172,28 +80,50 @@
             that.$emit("closeForm","close");
           }
         });
+
       },
 
       handlePermsLoad(permsRoleId){
 
+
         var that = this;
+        that.checkedKeys = [];
+        that.data = [];
         var params = new URLSearchParams();
         params.append('permsRoleId', permsRoleId);
         var url = '/sys_perms_role_manager/list';
         this.$validater.loadingPost(that, url, params, null, function (result) {
 
 
+          debugger
           that.title = result.sys_perms_roleModel.role_name+"权限管理";
-          var data = [];
-          result.allPermsGroupModels.forEach((module, index) => {
-            data.push({
-              label: module.name,
-              key: module.uid,
-              name: module.name
-            });
-          });
 
-          that.value = result.rolePermsGroupModels;
+
+
+          var data = [];
+          for(var key in result.allPermsGroupModels) {
+
+            var children = [];
+            var values = result.allPermsGroupModels[key];
+
+            values.forEach((perm, index) => {
+              children.push({
+                label: perm.uname,
+                id: perm.url,
+              });
+            });
+            data.push({
+              label:key,
+              id: null,
+              children:children
+            });
+          }
+          var checkedKeys = [];
+
+          result.rolePermsGroupUrls.forEach((perm, index) => {
+            checkedKeys.push(perm);
+          });
+          that.checkedKeys =checkedKeys;
           that.data = data;
         }, null);
       }
