@@ -35,18 +35,27 @@
             width="100%">
             <el-table-column
               label="日期"
-              width="300px" align="center">
+              width="200px" align="center">
               <template slot-scope="scope">
                 <i class="el-icon-time"></i>
                 <span style="text-align: center">{{ scope.row.date }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="姓名"
-              width="300px" align="center">
+            label="账号"
+            width="200px" align="center">
+            <template slot-scope="scope" style="text-align: center">
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium">{{ scope.row.username }}</el-tag>
+              </div>
+            </template>
+          </el-table-column>
+            <el-table-column
+              label="用户名"
+              width="200px" align="center">
               <template slot-scope="scope" style="text-align: center">
                 <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium">{{ scope.row.username }}</el-tag>
+                  <el-tag size="medium">{{ scope.row.nickname }}</el-tag>
                 </div>
               </template>
             </el-table-column>
@@ -94,12 +103,13 @@
             <el-input v-model="addForm.username"></el-input>
           </el-tooltip>
         </el-form-item>
-        <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
-          <el-tooltip class="item" content="长度在 5 到 20 个字符" effect="light" placement="right-start">
-            <el-input v-model="addForm.password"></el-input>
+        <el-form-item label="昵称" :label-width="formLabelWidth" prop="nickname">
+          <el-tooltip class="item" content="长度在 2 到 10 个字符" effect="light" placement="right-start">
+            <el-input v-model="addForm.nickname"></el-input>
           </el-tooltip>
         </el-form-item>
       </el-form>
+
       <div slot="footer" class="dialog-footer" align="center">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="handleAddOrEditUser">确 定</el-button>
@@ -163,7 +173,7 @@
         },
         addForm: {
           username: '',
-          password: '',
+          nickname: '',
           userid :'',
         },
         addUserRules: {
@@ -185,6 +195,16 @@
             },
             //可以设置双重验证标准
             {min: 5, max: 20, message: '长度在 5 到 20 个字符',}
+          ],
+          nickname: [
+            {
+              required: true, //是否必填
+              trigger: 'blur',  //何事件触发
+              validator: validater.emptyValidator
+
+            },
+            //可以设置双重验证标准
+            {min: 2, max: 10, message: '长度在 2 到 10 个字符',}
           ]
 
         },
@@ -202,7 +222,8 @@
           var params = new URLSearchParams();
           params.append('userId', id);
           var url = '/sys_user/del';
-          that.$validater.loadingPost(that, url, params, that.pageInfo, '删除成功', null,function (result) {
+          that.$validater.loadingPost(that, url, params,  null,'','操作失败',function (result) {
+            debugger
             that.loadUsers();
           });
         });
@@ -244,7 +265,8 @@
         this.dialogTitle = '添加系统用户';
         this.dialogFormVisible = true;
         this.addForm.userid = null;
-
+        that.addForm.username =null ;
+        that.addForm.nickname = null;
       },
       editUser(index,userid){
 
@@ -259,7 +281,7 @@
           that.dialogTitle = '编辑系统用户';
           that.dialogFormVisible = true;
           that.addForm.username =result.username ;
-          that.addForm.password = result.password;
+          that.addForm.nickname = result.nickname;
         });
       },
       handleAddOrEditUser() {
@@ -270,7 +292,7 @@
             var that = this;
             var params = new URLSearchParams();
             params.append('username', this.addForm.username);
-            params.append('password', this.addForm.password);
+            params.append('nickname', this.addForm.nickname);
             params.append('userid', this.addForm.userid);
             var url = '/sys_user/addOrEdit';
             this.$validater.loadingPost(this, url, params, this.pageInfo,'','操作失败' ,function () {

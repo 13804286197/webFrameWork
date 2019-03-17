@@ -1,20 +1,30 @@
 <template>
-    <el-form :rules="rules" ref="form" :model="loginform" label-width="80px" style="width: 400px;margin-left: 35%;margin-top: 10%">
-      <el-form-item prop="username" label="账户："  >
-        <el-tooltip class="item"  content="长度在 5 到 20 个字符"  effect="light" placement="right-start">
-        <el-input v-model="loginform.username"  ></el-input>
-        </el-tooltip>
-      </el-form-item>
-      <el-form-item prop="password" label="密码："  >
-        <el-tooltip class="item"  content="长度在 5 到 20 个字符"  effect="light" placement="right-start">
-        <el-input v-model="loginform.password"  ></el-input>
-        </el-tooltip>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">登陆</el-button>
-        <el-button type="primary" @click="resetForm">重置</el-button>
-      </el-form-item>
-    </el-form>
+  <div>
+
+    <div style="text-align: center;width: 100%">
+      <h2>登陆页面</h2>
+    </div>
+    <div style="width: 100%;text-align: center">
+      <el-form :rules="rules" ref="form" :model="loginform" label-width="80px" style="width: 400px;margin-left: 35%;margin-top: 10%">
+        <el-form-item prop="username" label="账户："  >
+          <el-tooltip class="item"  content="长度在 5 到 20 个字符"  effect="light" placement="right-start">
+            <el-input v-model="loginform.username"  ></el-input>
+          </el-tooltip>
+        </el-form-item>
+        <el-form-item prop="password" label="密码："  >
+          <el-tooltip class="item"  content="长度在 5 到 20 个字符"  effect="light" placement="right-start">
+            <el-input v-model="loginform.password"  ></el-input>
+          </el-tooltip>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">登陆</el-button>
+          <el-button type="primary" @click="resetForm">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+  </div>
+
 </template>
 
 <style>
@@ -93,8 +103,9 @@
 
                 that.$validater.showSuccessBottomRight(that,'登陆成功');
                 that.$validater.goTo(that,'/main');
+              }else {
+                that.$validater.showErrorTopCenterMessage(that,response.data.message);
               }
-
 
             },
               function (error) {

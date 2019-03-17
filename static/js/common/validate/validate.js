@@ -40,6 +40,9 @@ function validater() {
         position: 'bottom-right'
       });
     },
+    this.showErrorTopCenterMessage = function (obj,msg) {
+      obj.$message.error(msg);
+    },
     this.goTo = function(obj,url){
       obj.$router.push(url);
     },
@@ -128,11 +131,12 @@ function validater() {
             }
 
           } else {
+            debugger
             var msg = '操作失败';
-            if(failedMsg == null){
+            if(failedMsg == null && response.data.message==null){
               return;
             }
-            else  if(failedMsg==''||failedMsg=='undefined'){
+            else  if(failedMsg==''||failedMsg=='undefined'||(failedMsg ==null&&response.data.message!=null)){
               that.$validater.showTitleErrorBottomRight(that, msg, response.data.message);
             }else if(typeof successMsg=='function'){
                 failedMsg(response.data.message);
@@ -143,7 +147,19 @@ function validater() {
         },
         function (error) {
           that.$validater.hiddenLoading(loading)
-          that.$validater.showErrorBottomRight(that, error);
+          debugger
+          if(error.response != null &&error.response !='undefined' ){
+            if(error.response.data.message =="401"){
+              that.$validater.goTo(that,'/login')
+              that.$validater.showTitleErrorBottomRight('请求失败',that, '请登陆系统后再继续操作');
+            }else {
+              that.$validater.showErrorBottomRight(that, error.response.data.message);
+            }
+          }else {
+            that.$validater.showErrorBottomRight(that, error);
+          }
+
+
         });
     }
 
